@@ -55,14 +55,7 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
         // Better solution is likely something with GridBag or Grid, but I'd got it working mostly with BoxLayout and didn't want to do it all again.
         rightPanel.add(Box.createRigidArea(new Dimension(1, 140)));
 
-        JPanel actionPanel = new JPanel();
-        actionPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, Constants.SpaceBetweenComponents, Constants.SpaceBetweenComponents));
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> this.setVisible(false));
-        actionPanel.add(cancelButton);
-        JButton uploadButton = new JButton("Upload");
-        uploadButton.addActionListener(this);
-        actionPanel.add(uploadButton);
+        var actionPanel = new ActionPanel(this);
         content.add(actionPanel, BorderLayout.SOUTH);
 
         pack();

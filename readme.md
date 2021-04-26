@@ -11,6 +11,10 @@
 3. Build the project 
 4. In the Vassal module select screen, add the extension from {src}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
+## TODO ##
+- I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
+- put out to public on Thursday or Friday
+
 ## Future ##
 - Consider how to calculate fleet points for players
     - Build library of card/ship stats in this app? Means maintaining that forever.
@@ -36,7 +40,8 @@
 - Took validation off of objectives entry in case opponent has left and you can't get them anymore! Something else to do here?
 - Better way to get objectives? allow pasting from fleet builders?
 - add to help guide playing-conventions that will aid the submission process
-- can't tab to right First Player radio button, possibly because of this bug https://bugs.openjdk.java.net/browse/JDK-8154043
+    - uses cards and squadrons to build fleet lists
+- determine first player by where the initiative token is
 - figure out how to use IntelliJ variables in project to make it easier for others to start working on it
 
 ## Random Stuff ##
