@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="CreateVMDX">
+    <output-path>$PROJECT_DIR$/out/artifacts/CreateVMDX</output-path>
+    <root id="root">
+      <element id="archive" name="ArmadaData.vmdx">
+        <element id="module-output" name="ArmadaData" />
+        <element id="dir-copy" path="$PROJECT_DIR$/vassal_extension_config" />
+      </element>
+    </root>
+  </artifact>
+</component>

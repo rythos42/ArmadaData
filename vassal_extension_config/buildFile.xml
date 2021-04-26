@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<VASSAL.build.module.ModuleExtension anyModule="false" description="" extensionId="49d" module="Star Wars Armada" moduleVersion="4.4.0" nextPieceSlotId="0" vassalVersion="3.5.3" version="0.0">
+    <VASSAL.build.module.ExtensionElement target="">
+        <com.geeksong.ArmadaData.ArmadaDataConfigurable/>
+    </VASSAL.build.module.ExtensionElement>
+</VASSAL.build.module.ModuleExtension>
