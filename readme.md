@@ -36,11 +36,8 @@
 - Add points cost to fleet display "Acclamator II-class Assault Ship (71)"
 - Add "Ranked/Casual" toggle and update API post to send it
 - Attempt to auto-select player factions
-- Attempt to auto-select objectives played
 - Took validation off of objectives entry in case opponent has left and you can't get them anymore! Something else to do here?
 - Better way to get objectives? allow pasting from fleet builders?
-- add to help guide playing-conventions that will aid the submission process
-    - uses cards and squadrons to build fleet lists
 - determine first player by where the initiative token is
 - figure out how to use IntelliJ variables in project to make it easier for others to start working on it
 

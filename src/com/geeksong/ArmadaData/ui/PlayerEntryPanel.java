@@ -68,6 +68,13 @@ public class PlayerEntryPanel extends JPanel {
         assaultObjectiveComboBox = CreationUtility.createComboBox(this, "Objectives", Armada.AssaultObjectives, "Choose an assault objective...");
         defenseObjectiveComboBox = CreationUtility.createComboBox(this, Armada.DefenseObjectives, "Choose a defense objective...");
         navigationObjectiveComboBox = CreationUtility.createComboBox(this, Armada.NavigationObjectives, "Choose a navigation objective...");
+
+        if(fleet.getAssaultObjective() != null)
+            assaultObjectiveComboBox.setSelectedItem(fleet.getAssaultObjective());
+        if(fleet.getDefenseObjective() != null)
+            defenseObjectiveComboBox.setSelectedItem(fleet.getDefenseObjective());
+        if(fleet.getNavigationObjective() != null)
+            navigationObjectiveComboBox.setSelectedItem(fleet.getNavigationObjective());
     }
 
     public void focusFirstField() {

@@ -11,21 +11,23 @@ import com.geeksong.ArmadaData.ui.UploadResultsFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ArmadaDataConfigurable extends AbstractConfigurable {
-    private final int BOTTOM_PLAYER_Y_THRESHOLD = 1500;
+    private final int TOP_PLAYER_Y_THRESHOLD = 600;
+    private final int BOTTOM_PLAYER_Y_THRESHOLD = 2500;
 
-    private JButton aiButton;
+    private JButton uploadResultsButton;
 
     @Override
     public void addTo(Buildable buildable) {
         GameModule gameModule = (GameModule) buildable;
 
-        aiButton = new JButton("Upload Results");
-        aiButton.setPreferredSize(new Dimension(100, 52));  // couldn't figure out how to make it auto-fill
-        aiButton.addActionListener(evt -> ShowResultsFrame());
+        uploadResultsButton = new JButton("Upload Results");
+        uploadResultsButton.setPreferredSize(new Dimension(100, 52));  // couldn't figure out how to make it auto-fill
+        uploadResultsButton.addActionListener(evt -> ShowResultsFrame());
 
-        gameModule.getToolBar().add(aiButton);
+        gameModule.getToolBar().add(uploadResultsButton);
     }
 
     private void ShowResultsFrame() {
@@ -53,6 +55,8 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         // Get and sort cards on the table
         var topPlayerCardsOnTable = new ArrayList<Card>();
         var bottomPlayerCardsOnTable = new ArrayList<Card>();
+        var topPlayerObjectivesOnTable = new ArrayList<String>();
+        var bottomPlayerObjectivesOnTable = new ArrayList<String>();
         var squadronsOnTable = new ArrayList<String>();
         for (var piece : map.getAllPieces()) {
             var markerLayer = piece.getProperty("Layer");
@@ -62,17 +66,25 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
                 var cardX = Integer.parseInt(piece.getProperty("CurrentX").toString());
                 var cardY = Integer.parseInt(piece.getProperty("CurrentY").toString());
 
-                // Isn't currently a distinct identifier for "upgrade" vs "ship" or "squadron" cards,
-                // so using a dynamic property that's only on upgrades to distinguish them
-                var isUpgradeCard = piece.getProperty("Discard status") != null;
+                if(Arrays.stream(Armada.Objectives).anyMatch(objectiveName -> objectiveName.equals(name))) {
+                    // Card is an objective
+                    if (cardY <= TOP_PLAYER_Y_THRESHOLD)
+                        topPlayerObjectivesOnTable.add(name.toString());
+                    else if(cardY >= BOTTOM_PLAYER_Y_THRESHOLD)
+                        bottomPlayerObjectivesOnTable.add(name.toString());
+                } else {
+                    // Isn't currently a distinct identifier for "upgrade" vs "ship" or "squadron" cards,
+                    // so using a dynamic property that's only on upgrades to distinguish them
+                    var isUpgradeCard = piece.getProperty("Discard status") != null;
 
-                var card = new Card(name.toString(), cardX, isUpgradeCard ? CardType.Upgrade : CardType.ShipOrSquadron);
+                    var card = new Card(name.toString(), cardX, isUpgradeCard ? CardType.Upgrade : CardType.ShipOrSquadron);
 
-                // card belongs to player 1 because it's on the bottom half of the table
-                if (cardY < BOTTOM_PLAYER_Y_THRESHOLD)
-                    topPlayerCardsOnTable.add(card);
-                else
-                    bottomPlayerCardsOnTable.add(card);
+                    // card belongs to player 1 because it's on the bottom half of the table
+                    if (cardY <= TOP_PLAYER_Y_THRESHOLD)
+                        topPlayerCardsOnTable.add(card);
+                    else if(cardY >= BOTTOM_PLAYER_Y_THRESHOLD)
+                        bottomPlayerCardsOnTable.add(card);
+                }
             }
 
             if (markerLayer == "Squadron") {
@@ -119,8 +131,8 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
 
         return new Game(
                 new Player[] { playerOne, playerTwo },
-                new Fleet(topPlayerCardsOnTable),
-                new Fleet(bottomPlayerCardsOnTable)
+                new Fleet(topPlayerCardsOnTable, topPlayerObjectivesOnTable),
+                new Fleet(bottomPlayerCardsOnTable, bottomPlayerObjectivesOnTable)
         );
     }
 
@@ -134,7 +146,7 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
     @Override
     public void removeFrom(Buildable buildable) {
         GameModule gameModule = (GameModule)buildable;
-        gameModule.getToolBar().remove(aiButton);
+        gameModule.getToolBar().remove(uploadResultsButton);
     }
 
     @Override
