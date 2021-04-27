@@ -12,8 +12,14 @@
 4. In the Vassal module select screen, add the extension from {src}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
 ## TODO ##
+- determine first player by where the initiative token is
+
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
 - put out to public on Thursday or Friday
+- do another release
+  - Help link
+  - Auto-select objectives that are left in the play area
+  - auto-select objective played
 
 ## Future ##
 - Consider how to calculate fleet points for players
@@ -32,14 +38,16 @@
   - Presently counting squadrons on the table and comparing to who has what card
   - Doesn't properly model "card", since it's acting like we have 1-card-per-squadron (incorrect)
   - Doesn't account for mirror matches at all.
-- Attempt to auto-select objective played
 - Add points cost to fleet display "Acclamator II-class Assault Ship (71)"
 - Add "Ranked/Casual" toggle and update API post to send it
 - Attempt to auto-select player factions
+  - can I use the list of ships in the Game module to place them in a tree that contains the faction name?
+  - really would rather not build lists of ships into this extension
 - Took validation off of objectives entry in case opponent has left and you can't get them anymore! Something else to do here?
 - Better way to get objectives? allow pasting from fleet builders?
-- determine first player by where the initiative token is
 - figure out how to use IntelliJ variables in project to make it easier for others to start working on it
+- some way of determining owner?
+  - any way I can track who touches which ships during the game?
 
 ## Random Stuff ##
 

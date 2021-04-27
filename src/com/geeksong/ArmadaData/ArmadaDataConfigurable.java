@@ -58,6 +58,7 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         var topPlayerObjectivesOnTable = new ArrayList<String>();
         var bottomPlayerObjectivesOnTable = new ArrayList<String>();
         var squadronsOnTable = new ArrayList<String>();
+        String playedObjective = "";
         for (var piece : map.getAllPieces()) {
             var markerLayer = piece.getProperty("Layer");
             var name = piece.getProperty("BasicName");
@@ -72,6 +73,8 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
                         topPlayerObjectivesOnTable.add(name.toString());
                     else if(cardY >= BOTTOM_PLAYER_Y_THRESHOLD)
                         bottomPlayerObjectivesOnTable.add(name.toString());
+                    else
+                        playedObjective = name.toString();
                 } else {
                     // Isn't currently a distinct identifier for "upgrade" vs "ship" or "squadron" cards,
                     // so using a dynamic property that's only on upgrades to distinguish them
@@ -132,7 +135,8 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         return new Game(
                 new Player[] { playerOne, playerTwo },
                 new Fleet(topPlayerCardsOnTable, topPlayerObjectivesOnTable),
-                new Fleet(bottomPlayerCardsOnTable, bottomPlayerObjectivesOnTable)
+                new Fleet(bottomPlayerCardsOnTable, bottomPlayerObjectivesOnTable),
+                playedObjective
         );
     }
 

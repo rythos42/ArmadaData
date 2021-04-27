@@ -10,7 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ActionPanel extends JPanel {
-    public ActionPanel(ActionListener uploadActionListener) {
+    public ActionPanel(ActionListener uploadActionListener, ActionListener cancelActionListener) {
         setLayout(new FlowLayout(FlowLayout.RIGHT, Constants.SpaceBetweenComponents, Constants.SpaceBetweenComponents));
 
         JLabel helpHyperLink = new JLabel("Less data entry?");
@@ -39,11 +39,13 @@ public class ActionPanel extends JPanel {
         add(helpHyperLink);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> this.setVisible(false));
+        cancelButton.addActionListener(cancelActionListener);
         add(cancelButton);
 
         JButton uploadButton = new JButton("Upload");
         uploadButton.addActionListener(uploadActionListener);
         add(uploadButton);
     }
+
+
 }

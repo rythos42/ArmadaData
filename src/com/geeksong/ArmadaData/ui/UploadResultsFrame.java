@@ -49,13 +49,14 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
                 "First Player",
                 Arrays.stream(players).filter(player -> player != null).map(Player::getName).toArray(String[]::new));
         objectivePlayedComboBox = CreationUtility.createComboBox(leftPanel, "Objective Played", Armada.Objectives, "Choose an objective...");
+        objectivePlayedComboBox.setSelectedItem(game.getPlayedObjective());
         tournamentCodeTextField = CreationUtility.createTextField(leftPanel, "Tournament Code (optional)");
 
         // Not a great plan. This forces the right content to the top of the right panel, even after adding all the above, using a carefully determined static height.
         // Better solution is likely something with GridBag or Grid, but I'd got it working mostly with BoxLayout and didn't want to do it all again.
         rightPanel.add(Box.createRigidArea(new Dimension(1, 140)));
 
-        var actionPanel = new ActionPanel(this);
+        var actionPanel = new ActionPanel(this, e -> this.setVisible(false));
         content.add(actionPanel, BorderLayout.SOUTH);
 
         pack();
