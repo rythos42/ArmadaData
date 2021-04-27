@@ -12,8 +12,6 @@
 4. In the Vassal module select screen, add the extension from {src}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
 ## TODO ##
-- determine first player by where the initiative token is
-
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
 - put out to public on Thursday or Friday
 - do another release
@@ -30,7 +28,6 @@
     - Count dead ships by "ships not in play area"
     - Count objective points by "objective with tokens", rebel vs imperial tokens
     - TTS puts the calculation in for players, but allows them to override it
-- Toggle to select "ranked" or not, when there is a vassal ranking
 - Better way of associating fleets with players
   - Ships are marked by which player spawns them, but anyone can spawn anything they like
   - Position (bottom player == player 1) doesn't always work
@@ -40,14 +37,17 @@
   - Doesn't account for mirror matches at all.
 - Add points cost to fleet display "Acclamator II-class Assault Ship (71)"
 - Add "Ranked/Casual" toggle and update API post to send it
-- Attempt to auto-select player factions
-  - can I use the list of ships in the Game module to place them in a tree that contains the faction name?
-  - really would rather not build lists of ships into this extension
-- Took validation off of objectives entry in case opponent has left and you can't get them anymore! Something else to do here?
-- Better way to get objectives? allow pasting from fleet builders?
 - figure out how to use IntelliJ variables in project to make it easier for others to start working on it
-- some way of determining owner?
-  - any way I can track who touches which ships during the game?
+- auto-fill owner based on who spawned the pieces
+  - add help file doc around this
+  - fill in neither if the person is the same
+- determine first player by where the initiative token is
+  - can determine if top or bottom is first player, but with current UI can't pick one of them because I don't have a name!!
+  - try to go back to radio button technique? :(
+- trying to do faction selection but can't get piecewindow
+  - got it using a certain combination of things ("single window" option in Preferences+cutting/pasting other Game Piece Palettes below the main one)
+  - check to see if this actually allows me to get access to the piece tree to determine faction
+
 
 ## Random Stuff ##
 
