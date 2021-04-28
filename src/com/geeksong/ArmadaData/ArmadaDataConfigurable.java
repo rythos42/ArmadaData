@@ -62,6 +62,7 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         for (var piece : map.getAllPieces()) {
             var markerLayer = piece.getProperty("Layer");
             var name = piece.getProperty("BasicName");
+            var spawnedBySide = piece.getProperty("playerSide");
 
             if (markerLayer == "Card") {
                 var cardX = Integer.parseInt(piece.getProperty("CurrentX").toString());
@@ -80,7 +81,11 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
                     // so using a dynamic property that's only on upgrades to distinguish them
                     var isUpgradeCard = piece.getProperty("Discard status") != null;
 
-                    var card = new Card(name.toString(), cardX, isUpgradeCard ? CardType.Upgrade : CardType.ShipOrSquadron);
+                    var card = new Card(
+                            name.toString(),
+                            cardX,
+                            isUpgradeCard ? CardType.Upgrade : CardType.ShipOrSquadron,
+                            spawnedBySide.toString());
 
                     // card belongs to player 1 because it's on the bottom half of the table
                     if (cardY <= TOP_PLAYER_Y_THRESHOLD)
@@ -122,12 +127,13 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         var players = gameModule.getPlayerRoster().getPlayers();
         Player playerOne = null, playerTwo = null;
         for (var playerInfo : players) {
+            var player = new Player(playerInfo.getSide(), playerInfo.playerName, playerInfo.playerId);
             switch (playerInfo.getSide()) {
                 case "Player 1":
-                    playerOne = new Player(playerInfo.playerName, playerInfo.playerId);
+                    playerOne = player;
                     break;
                 case "Player 2":
-                    playerTwo = new Player(playerInfo.playerName, playerInfo.playerId);
+                    playerTwo = player;
                     break;
             }
         }

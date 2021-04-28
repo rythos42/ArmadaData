@@ -11,6 +11,15 @@ public class Game {
         this.topPlayerFleet = topPlayerFleet;
         this.bottomPlayerFleet = bottomPlayerFleet;
         this.playedObjective = playedObjective;
+
+        for(var player : players) {
+            if(player == null)
+                continue;
+            if(player.getSide().equals(topPlayerFleet.getFleetSide()))
+                topPlayerFleet.setPlayer(player);
+            if(player.getSide().equals(bottomPlayerFleet.getFleetSide()))
+                bottomPlayerFleet.setPlayer(player);
+        }
     }
 
     public Player[] getPlayers() { return this.players; }

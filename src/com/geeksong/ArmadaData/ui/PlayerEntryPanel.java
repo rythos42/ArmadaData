@@ -59,6 +59,7 @@ public class PlayerEntryPanel extends JPanel {
                 this,
                 "Fleet Owner",
                 Arrays.stream(players).filter(Objects::nonNull).map(Player::getName).toArray(String[]::new));
+        ownerComboBox.setSelectedItem(fleet.getPlayer().getName());
 
         add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
 

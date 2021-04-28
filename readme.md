@@ -18,6 +18,7 @@
   - Help link
   - Auto-select objectives that are left in the play area
   - auto-select objective played
+  - auto-select player name
 
 ## Future ##
 - Consider how to calculate fleet points for players
@@ -28,9 +29,6 @@
     - Count dead ships by "ships not in play area"
     - Count objective points by "objective with tokens", rebel vs imperial tokens
     - TTS puts the calculation in for players, but allows them to override it
-- Better way of associating fleets with players
-  - Ships are marked by which player spawns them, but anyone can spawn anything they like
-  - Position (bottom player == player 1) doesn't always work
 - How to count better squadrons?
   - Presently counting squadrons on the table and comparing to who has what card
   - Doesn't properly model "card", since it's acting like we have 1-card-per-squadron (incorrect)
@@ -38,9 +36,6 @@
 - Add points cost to fleet display "Acclamator II-class Assault Ship (71)"
 - Add "Ranked/Casual" toggle and update API post to send it
 - figure out how to use IntelliJ variables in project to make it easier for others to start working on it
-- auto-fill owner based on who spawned the pieces
-  - add help file doc around this
-  - fill in neither if the person is the same
 - determine first player by where the initiative token is
   - can determine if top or bottom is first player, but with current UI can't pick one of them because I don't have a name!!
   - try to go back to radio button technique? :(
