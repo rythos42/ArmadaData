@@ -1,7 +1,5 @@
 package com.geeksong.ArmadaData.model;
 
-import static com.geeksong.ArmadaData.model.CardType.*;
-
 public class Card {
     private final int x;
     private final String name;

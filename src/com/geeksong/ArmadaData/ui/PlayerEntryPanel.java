@@ -18,6 +18,7 @@ public class PlayerEntryPanel extends JPanel {
     private final JTextArea fleetTextArea;
     private final JComboBox<String> ownerComboBox;
     private final JComboBox<String> factionComboBox;
+    private final JRadioButton firstPlayerRadio;
     private final JTextField fleetPointsTextField;
     private final JTextField pointsScoredTextField;
     private final String title;
@@ -64,6 +65,11 @@ public class PlayerEntryPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
 
         factionComboBox = CreationUtility.createComboBox(this, "Faction", Armada.Factions, "Choose a faction...");
+
+        add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
+        firstPlayerRadio = new JRadioButton("First player");
+        add(firstPlayerRadio);
+
         fleetPointsTextField = CreationUtility.createTextField(this, "Fleet Points");
         pointsScoredTextField = CreationUtility.createTextField(this, "Points Scored");
         assaultObjectiveComboBox = CreationUtility.createComboBox(this, "Objectives", Armada.AssaultObjectives, "Choose an assault objective...");
@@ -77,6 +83,8 @@ public class PlayerEntryPanel extends JPanel {
         if(fleet.getNavigationObjective() != null)
             navigationObjectiveComboBox.setSelectedItem(fleet.getNavigationObjective());
     }
+
+    public JRadioButton getFirstPlayerRadio() { return this.firstPlayerRadio; }
 
     public void focusFirstField() {
         this.ownerComboBox.requestFocus();
@@ -139,10 +147,6 @@ public class PlayerEntryPanel extends JPanel {
                 this.factionComboBox.getSelectedItem().toString(),
                 Integer.parseInt(this.fleetPointsTextField.getText()),
                 Integer.parseInt(this.pointsScoredTextField.getText()));
-    }
-
-    public boolean belongsToPlayer(String playerName) {
-        return this.ownerComboBox.getSelectedItem().equals(playerName);
     }
 
     private String[] getFleet() {

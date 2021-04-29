@@ -5,24 +5,22 @@ import VASSAL.build.module.Chatter;
 import com.geeksong.ArmadaData.model.Armada;
 import com.geeksong.ArmadaData.model.EntryData;
 import com.geeksong.ArmadaData.model.Game;
-import com.geeksong.ArmadaData.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class UploadResultsFrame extends JFrame implements ActionListener {
     private final PlayerEntryPanel leftPanel;
     private final PlayerEntryPanel rightPanel;
-    private final JComboBox<String> firstPlayerComboBox;
     private final JComboBox<String> objectivePlayedComboBox;
     private final JTextField tournamentCodeTextField;
 
@@ -43,18 +41,24 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
         rightPanel = new PlayerEntryPanel("Fleet Two", players, game.getBottomPlayerFleet());
         content.add(BorderLayout.EAST, rightPanel);
 
+        leftPanel.getFirstPlayerRadio().addItemListener(e -> {
+            if(e.getStateChange() == ItemEvent.SELECTED)
+                rightPanel.getFirstPlayerRadio().setSelected(false);
+        });
+
+        rightPanel.getFirstPlayerRadio().addItemListener(e -> {
+            if(e.getStateChange() == ItemEvent.SELECTED)
+                leftPanel.getFirstPlayerRadio().setSelected(false);
+        });
+
         leftPanel.add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
-        firstPlayerComboBox = CreationUtility.createEditableComboBox(
-                leftPanel,
-                "First Player",
-                Arrays.stream(players).filter(player -> player != null).map(Player::getName).toArray(String[]::new));
         objectivePlayedComboBox = CreationUtility.createComboBox(leftPanel, "Objective Played", Armada.Objectives, "Choose an objective...");
         objectivePlayedComboBox.setSelectedItem(game.getPlayedObjective());
         tournamentCodeTextField = CreationUtility.createTextField(leftPanel, "Tournament Code (optional)");
 
         // Not a great plan. This forces the right content to the top of the right panel, even after adding all the above, using a carefully determined static height.
         // Better solution is likely something with GridBag or Grid, but I'd got it working mostly with BoxLayout and didn't want to do it all again.
-        rightPanel.add(Box.createRigidArea(new Dimension(1, 140)));
+        rightPanel.add(Box.createRigidArea(new Dimension(1, 100)));
 
         var actionPanel = new ActionPanel(this, e -> this.setVisible(false));
         content.add(actionPanel, BorderLayout.SOUTH);
@@ -77,7 +81,7 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
         if(!this.rightPanel.validate(validationErrors))
             validatedSuccessfully = false;
 
-        if(this.firstPlayerComboBox.getSelectedItem() == null) {
+        if(!this.leftPanel.getFirstPlayerRadio().isSelected() && !this.rightPanel.getFirstPlayerRadio().isSelected()) {
             validationErrors.add("No first player selected.");
             validatedSuccessfully = false;
         }
@@ -109,7 +113,7 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
     }
 
     private EntryData getEntryData() {
-        if (isLeftFirstPlayer()) {
+        if (this.leftPanel.getFirstPlayerRadio().isSelected()) {
             return new EntryData(
                     this.leftPanel.getPlayerData(),
                     this.rightPanel.getPlayerData(),
@@ -122,11 +126,6 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
                     this.objectivePlayedComboBox.getSelectedItem().toString(),
                     this.tournamentCodeTextField.getText());
         }
-    }
-
-    private boolean isLeftFirstPlayer() {
-        var firstPlayerName = this.firstPlayerComboBox.getSelectedItem().toString();
-        return this.leftPanel.belongsToPlayer(firstPlayerName);
     }
 
     private boolean sendDataToApi(EntryData entryData) {
@@ -161,7 +160,7 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
                 "Error uploading results.",
                 JOptionPane.ERROR_MESSAGE);
         chatter.show("Upload unsuccessful, please send this to the extension maintainer.");
-        chatter.show(error.toString());
+        chatter.show(error);
     }
 }
 

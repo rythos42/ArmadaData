@@ -13,12 +13,8 @@
 
 ## TODO ##
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
-- put out to public on Thursday or Friday
-- do another release
-  - Help link
-  - Auto-select objectives that are left in the play area
-  - auto-select objective played
-  - auto-select player name
+- put out to public
+- re-write Chatter messages from the POV that both players will see them.
 
 ## Future ##
 - Consider how to calculate fleet points for players
@@ -42,7 +38,13 @@
 - trying to do faction selection but can't get piecewindow
   - got it using a certain combination of things ("single window" option in Preferences+cutting/pasting other Game Piece Palettes below the main one)
   - check to see if this actually allows me to get access to the piece tree to determine faction
-
+```
+        for (final PieceWindow window : GameModule.getGameModule().getAllDescendantComponentsOf(PieceWindow.class)) {
+            if("Game pieces".equals(window.getConfigureName())){
+                var i = 0;
+            }
+        }
+ ```
 
 ## Random Stuff ##
 
