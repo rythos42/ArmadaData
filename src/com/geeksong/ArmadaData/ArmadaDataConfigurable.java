@@ -5,6 +5,7 @@ import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
 import VASSAL.build.module.documentation.HelpFile;
+import VASSAL.counters.GamePiece;
 import com.geeksong.ArmadaData.model.*;
 import com.geeksong.ArmadaData.ui.UploadResultsFrame;
 
@@ -59,20 +60,21 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         var bottomPlayerObjectivesOnTable = new ArrayList<String>();
         var squadronsOnTable = new ArrayList<String>();
         String playedObjective = "";
+        Boolean topPlayerIsFirstPlayer = null;
+
         for (var piece : map.getAllPieces()) {
             var markerLayer = piece.getProperty("Layer");
             var name = piece.getProperty("BasicName");
             var spawnedBySide = piece.getProperty("playerSide");
+            var pieceX = getNumericProperty(piece, "CurrentX");
+            var pieceY = getNumericProperty(piece, "CurrentY");
 
             if (markerLayer == "Card") {
-                var cardX = Integer.parseInt(piece.getProperty("CurrentX").toString());
-                var cardY = Integer.parseInt(piece.getProperty("CurrentY").toString());
-
                 if(Arrays.stream(Armada.Objectives).anyMatch(objectiveName -> objectiveName.equals(name))) {
                     // Card is an objective
-                    if (cardY <= TOP_PLAYER_Y_THRESHOLD)
+                    if (pieceY <= TOP_PLAYER_Y_THRESHOLD)
                         topPlayerObjectivesOnTable.add(name.toString());
-                    else if(cardY >= BOTTOM_PLAYER_Y_THRESHOLD)
+                    else if(pieceY >= BOTTOM_PLAYER_Y_THRESHOLD)
                         bottomPlayerObjectivesOnTable.add(name.toString());
                     else
                         playedObjective = name.toString();
@@ -83,20 +85,27 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
 
                     var card = new Card(
                             name.toString(),
-                            cardX,
+                            pieceX,
                             isUpgradeCard ? CardType.Upgrade : CardType.ShipOrSquadron,
                             spawnedBySide.toString());
 
                     // card belongs to player 1 because it's on the bottom half of the table
-                    if (cardY <= TOP_PLAYER_Y_THRESHOLD)
+                    if (pieceY <= TOP_PLAYER_Y_THRESHOLD)
                         topPlayerCardsOnTable.add(card);
-                    else if(cardY >= BOTTOM_PLAYER_Y_THRESHOLD)
+                    else if(pieceY >= BOTTOM_PLAYER_Y_THRESHOLD)
                         bottomPlayerCardsOnTable.add(card);
                 }
             }
 
             if (markerLayer == "Squadron") {
                 squadronsOnTable.add(name.toString());
+            }
+
+            if("Initiative Token".equals(name)) {
+                if (pieceY <= TOP_PLAYER_Y_THRESHOLD)
+                    topPlayerIsFirstPlayer = true;
+                else if(pieceY >= BOTTOM_PLAYER_Y_THRESHOLD)
+                    topPlayerIsFirstPlayer = false;
             }
         }
 
@@ -142,10 +151,18 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
                 new Player[] { playerOne, playerTwo },
                 new Fleet(topPlayerCardsOnTable, topPlayerObjectivesOnTable),
                 new Fleet(bottomPlayerCardsOnTable, bottomPlayerObjectivesOnTable),
-                playedObjective
+                playedObjective,
+                topPlayerIsFirstPlayer
         );
     }
 
+    private Integer getNumericProperty(GamePiece piece, String key) {
+        var property = piece.getProperty(key);
+        if(property == null)
+            return null;
+
+        return Integer.parseInt(property.toString());
+    }
 
     /********
 

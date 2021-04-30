@@ -27,7 +27,7 @@ public class PlayerEntryPanel extends JPanel {
     private final JComboBox<String> defenseObjectiveComboBox;
     private final JComboBox<String> navigationObjectiveComboBox;
 
-    public PlayerEntryPanel(String title, Player[] players, Fleet fleet) {
+    public PlayerEntryPanel(String title, Player[] players, Fleet fleet, Boolean isFirstPlayer) {
         this.title = title;
         this.players = players;
 
@@ -68,6 +68,7 @@ public class PlayerEntryPanel extends JPanel {
 
         add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
         firstPlayerRadio = new JRadioButton("First player");
+        firstPlayerRadio.setSelected(isFirstPlayer != null && isFirstPlayer);
         add(firstPlayerRadio);
 
         fleetPointsTextField = CreationUtility.createTextField(this, "Fleet Points");

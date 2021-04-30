@@ -35,10 +35,11 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
         getContentPane().add(content);
 
         var players = game.getPlayers();
-        leftPanel = new PlayerEntryPanel("Fleet One", players, game.getTopPlayerFleet());
+        var topPlayerIsFirstPlayer = game.isTopPlayerFirstPlayer();
+        leftPanel = new PlayerEntryPanel("Fleet One", players, game.getTopPlayerFleet(), topPlayerIsFirstPlayer);
         content.add(BorderLayout.WEST, leftPanel);
 
-        rightPanel = new PlayerEntryPanel("Fleet Two", players, game.getBottomPlayerFleet());
+        rightPanel = new PlayerEntryPanel("Fleet Two", players, game.getBottomPlayerFleet(), topPlayerIsFirstPlayer != null && !topPlayerIsFirstPlayer);
         content.add(BorderLayout.EAST, rightPanel);
 
         leftPanel.getFirstPlayerRadio().addItemListener(e -> {

@@ -15,6 +15,12 @@
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
 - put out to public
 - re-write Chatter messages from the POV that both players will see them.
+- max size of the text area, make it scrollable
+- multi-counting several squadrons
+
+New release
+- auto-selection of first player
+- update wiki
 
 ## Future ##
 - Consider how to calculate fleet points for players
