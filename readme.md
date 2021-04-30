@@ -14,15 +14,14 @@
 ## TODO ##
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
 - put out to public
-- re-write Chatter messages from the POV that both players will see them.
 - multi-counting several squadrons
-- bug from James
-- catch all exceptions and write to Chatter
-  - have them send a vsav to me for diagnosis
 
 New release
 - auto-selection of first player
 - update wiki
+- fixed bug with giant fleet text area
+- fixed bug where if the player who spawned a fleet isn't in the game, an error would occur
+- preventing errors from trying to go to the Vassal bugtracker, they won't help
 
 ## Future ##
 - Consider how to calculate fleet points for players
@@ -53,6 +52,8 @@ New release
             }
         }
  ```
+- fleets spawned by Shrimpbox have a side of "<observer>", so am unable to link them to a certain player.
+  - more evidence we might want an in-vassal ship spawner
 
 ## Random Stuff ##
 

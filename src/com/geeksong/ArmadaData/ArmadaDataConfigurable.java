@@ -11,6 +11,8 @@ import com.geeksong.ArmadaData.ui.UploadResultsFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,22 +36,26 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
     private void ShowResultsFrame() {
         var gameModule = GameModule.getGameModule();
         var chat = gameModule.getChatter();
-        var map = Map.getMapById("Table");
-        if(map == null) {
-            chat.show("No map by the name 'Table' available. Report this to the extension maintainer.");
-            return;
-        }
+        try {
+            var map = Map.getMapById("Table");
+            if (map == null) {
+                chat.show("ArmadaData: No map by the name 'Table' available. Report this to the extension maintainer.");
+                return;
+            }
 
-        try
-        {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        var game = getGame(gameModule, map);
-        var uploadResultsFrame = new UploadResultsFrame(game);
-        uploadResultsFrame.setVisible(true);
+            var game = getGame(gameModule, map);
+            var uploadResultsFrame = new UploadResultsFrame(game);
+            uploadResultsFrame.setVisible(true);
+        } catch (Exception ex) {
+            StringWriter exceptionStackTrace = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(exceptionStackTrace);
+            ex.printStackTrace(printWriter);
+
+            chat.show(exceptionStackTrace.toString());
+            chat.show("ArmadaData: Error uploading results. Send the above text to the extension maintainer.");
+        }
     }
 
     private Game getGame(GameModule gameModule, Map map) {

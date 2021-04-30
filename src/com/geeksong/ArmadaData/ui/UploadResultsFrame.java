@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -136,32 +138,37 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(entryData.getJsonRequest()))
                 .build();
-        var chatter = GameModule.getGameModule().getChatter();
+        var chat = GameModule.getGameModule().getChatter();
 
         try {
             var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if(response.statusCode() >= 200 && response.statusCode() <= 299) {
-                chatter.show("Upload successful! Thanks!");
+                chat.show("ArmadaData: Upload successful! Thanks!");
                 return true;
             } else {
-                showError(chatter, response.body());
+                showError(chat, response.body());
                 return false;
             }
         } catch(IOException | InterruptedException ex) {
-            showError(chatter, ex.toString());
+            StringWriter exceptionStackTrace = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(exceptionStackTrace);
+            ex.printStackTrace(printWriter);
+
+            showError(chat, exceptionStackTrace.toString());
             return false;
         }
     }
 
-    private void showError(Chatter chatter, String error) {
+    private void showError(Chatter chat, String error) {
         JOptionPane.showMessageDialog(
                 this,
                 "Error uploading results, see Vassal log for details.",
                 "Error uploading results.",
                 JOptionPane.ERROR_MESSAGE);
-        chatter.show("Upload unsuccessful, please send this to the extension maintainer.");
-        chatter.show(error);
+
+        chat.show(error);
+        chat.show("ArmadaData: Error uploading results. Send the above text to the extension maintainer.");
     }
 }
 
