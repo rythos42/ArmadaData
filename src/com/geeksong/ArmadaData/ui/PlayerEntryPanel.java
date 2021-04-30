@@ -53,8 +53,13 @@ public class PlayerEntryPanel extends JPanel {
         });
         fleetTextArea.setText(fleet.getFleetForOutput());
         fleetTextArea.setLineWrap(true);
-        fleetTextArea.setAlignmentX(Component.LEFT_ALIGNMENT);
-        add(fleetTextArea);
+        fleetTextArea.setCaretPosition(0);
+        JScrollPane fleetTextAreaScrolling = new JScrollPane(fleetTextArea);
+        fleetTextAreaScrolling.setAlignmentX(Component.LEFT_ALIGNMENT);
+        fleetTextAreaScrolling.setMaximumSize(new Dimension(400, 300));
+        fleetTextAreaScrolling.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        fleetTextAreaScrolling.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(fleetTextAreaScrolling);
 
         ownerComboBox = CreationUtility.createEditableComboBox(
                 this,
