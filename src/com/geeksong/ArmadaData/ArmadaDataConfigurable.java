@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 
 public class ArmadaDataConfigurable extends AbstractConfigurable {
     private final int TOP_PLAYER_Y_THRESHOLD = 600;
@@ -64,7 +65,7 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         var bottomPlayerCardsOnTable = new ArrayList<Card>();
         var topPlayerObjectivesOnTable = new ArrayList<String>();
         var bottomPlayerObjectivesOnTable = new ArrayList<String>();
-        var squadronsOnTable = new ArrayList<String>();
+        var squadronsOnTable = new Hashtable<String, Integer>();
         String playedObjective = "";
         Boolean topPlayerIsFirstPlayer = null;
 
@@ -104,7 +105,11 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
             }
 
             if (markerLayer == "Squadron") {
-                squadronsOnTable.add(name.toString());
+                var squadronName = name.toString();
+                if(squadronsOnTable.containsKey(squadronName))
+                    squadronsOnTable.put(squadronName, squadronsOnTable.get(squadronName) + 1);
+                else
+                    squadronsOnTable.put(squadronName, 0);  // putting 0, rather than 1 -- the card counts as the first squadron
             }
 
             if("Initiative Token".equals(name)) {
@@ -119,22 +124,19 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
         bottomPlayerCardsOnTable.sort(new CardComparator());
 
         // count squadrons on table and duplicate those cards for those players
-        boolean skipFirstPlayerOne = true, skipFirstPlayerTwo = true;
-        for (var squadronName : squadronsOnTable) {
-            var playerOneSquadron = topPlayerCardsOnTable.stream().filter(card -> card.getName().contains(squadronName)).findFirst();
-            if (playerOneSquadron.isPresent()) {
-                if (skipFirstPlayerOne)
-                    skipFirstPlayerOne = false;
-                else
-                    topPlayerCardsOnTable.add(playerOneSquadron.get());
+        for(var squadronData : squadronsOnTable.entrySet()) {
+            var playerOneSquadron = containsSquadron(topPlayerCardsOnTable, squadronData.getKey());
+            if (playerOneSquadron != null) {
+                for(var i = 0; i < squadronData.getValue(); i++) {
+                    topPlayerCardsOnTable.add(playerOneSquadron);
+                }
             }
 
-            var playerTwoSquadron = bottomPlayerCardsOnTable.stream().filter(card -> card.getName().contains(squadronName)).findFirst();
-            if (playerTwoSquadron.isPresent()) {
-                if (skipFirstPlayerTwo)
-                    skipFirstPlayerTwo = false;
-                else
-                    bottomPlayerCardsOnTable.add(playerTwoSquadron.get());
+            var playerTwoSquadron = containsSquadron(bottomPlayerCardsOnTable, squadronData.getKey());
+            if (playerTwoSquadron != null) {
+                for(var i = 0; i < squadronData.getValue(); i++) {
+                    bottomPlayerCardsOnTable.add(playerTwoSquadron);
+                }
             }
         }
 
@@ -160,6 +162,26 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
                 playedObjective,
                 topPlayerIsFirstPlayer
         );
+    }
+
+    private Card containsSquadron(ArrayList<Card> fleet, String squadronName) {
+        for(var card : fleet) {
+            var cardName = card.getName();
+            var slashIndex = cardName.indexOf("/");
+            if(slashIndex >= 0) {
+                // card is a unique, so name is of the form "Axe/V-19 Squadron"
+                // squadronName is "Axe" or "V-19 Torrent", so must match the text before the "/"
+                var actualName = cardName.substring(0, slashIndex);
+                if(actualName == squadronName)
+                    return card;
+            } else {
+                // card is a generic, so name is of the form "V-19 TorrentSquadron"
+                // squadronName is "V-19 Torrent", so cardName must contain squadronName
+                if(cardName.contains(squadronName))
+                    return card;
+            }
+        }
+        return null;
     }
 
     private Integer getNumericProperty(GamePiece piece, String key) {
