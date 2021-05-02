@@ -9,12 +9,14 @@ public class EntryData {
     private final PlayerData secondPlayerData;
     private final String objectivePlayed;
     private final String tournamentCode;
+    private final boolean isRanked;
 
-    public EntryData(PlayerData firstPlayerData, PlayerData secondPlayerData, String objectivePlayed, String tournamentCode) {
+    public EntryData(PlayerData firstPlayerData, PlayerData secondPlayerData, String objectivePlayed, String tournamentCode, boolean isRanked) {
         this.firstPlayerData = firstPlayerData;
         this.secondPlayerData = secondPlayerData;
         this.objectivePlayed = objectivePlayed;
         this.tournamentCode = tournamentCode;
+        this.isRanked = isRanked;
     }
 
     public String getJsonRequest() {
@@ -54,7 +56,7 @@ public class EntryData {
                 "       \"player2fleetPoints\": { \"integerValue\": " + this.secondPlayerData.getFleetPoints() + " }," +
                 "       \"player2points\": { \"integerValue\": " + tournamentPoints[1] + " }," +
                 "       \"submitted\": { \"stringValue\": \"" + formattedDate + "\" }," +
-                "       \"ranked\": { \"booleanValue\": false }," +
+                "       \"ranked\": { \"booleanValue\": " + this.isRanked + " }," +
                 "       \"tournamentCode\": { \"stringValue\": \"" + this.tournamentCode + "\" }" +
                 "   }" +
                 "}";

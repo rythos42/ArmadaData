@@ -15,21 +15,6 @@ This is an extension to the [VASSAL](http://www.vassalengine.org/index.php) modu
 3. Build the project 
 4. In the VASSAL module select screen, add the extension from {repo}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
-## TODO ##
-- Add "Ranked/Casual" toggle and update API post to send it
-
-- I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
-- put out to public
-
-New release
-- auto-selection of first player
-- update wiki
-- fixed bug with giant fleet text area
-- fixed bug where if the player who spawned a fleet isn't in the game, an error would occur
-- fixed bug with counting squadrons incredibly wrong 
-- preventing errors from trying to go to the Vassal bugtracker, they won't help
-- updated dev environment to be easier to get started developing
-
 ## Future ##
 - Faction auto-selection
   - Tried to use PieceWindow, but ran into a Java/VASSAL problem and couldn't fix it. Posted on forum, have a branch with prototype code, not hopeful it will work.
@@ -56,3 +41,6 @@ New release
   - Have a library of objectives and what their victory tokens are worth
   - Tokens above the card count towards the top player, tokens below the card count towards the bottom player.
   - Count dead ships/squadrons as ships not in the play area
+- Fix how the dialog is laid out
+  - Using a static "buffer" with a BoxLayout isn't great
+  - Dialog feels a little "claustrophobic" to me.

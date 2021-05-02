@@ -25,6 +25,7 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
     private final PlayerEntryPanel rightPanel;
     private final JComboBox<String> objectivePlayedComboBox;
     private final JTextField tournamentCodeTextField;
+    private final JCheckBox rankedCheckBox;
 
     public UploadResultsFrame(Game game) {
         super("Upload Results");
@@ -59,9 +60,13 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
         objectivePlayedComboBox.setSelectedItem(game.getPlayedObjective());
         tournamentCodeTextField = CreationUtility.createTextField(leftPanel, "Tournament Code (optional)");
 
+        leftPanel.add(Box.createRigidArea(new Dimension(1, Constants.SpaceBetweenComponents)));
+        rankedCheckBox = new JCheckBox("Ranked");
+        leftPanel.add(rankedCheckBox);
+
         // Not a great plan. This forces the right content to the top of the right panel, even after adding all the above, using a carefully determined static height.
         // Better solution is likely something with GridBag or Grid, but I'd got it working mostly with BoxLayout and didn't want to do it all again.
-        rightPanel.add(Box.createRigidArea(new Dimension(1, 100)));
+        rightPanel.add(Box.createRigidArea(new Dimension(1, 140)));
 
         var actionPanel = new ActionPanel(this, e -> this.setVisible(false));
         content.add(actionPanel, BorderLayout.SOUTH);
@@ -121,22 +126,25 @@ public class UploadResultsFrame extends JFrame implements ActionListener {
                     this.leftPanel.getPlayerData(),
                     this.rightPanel.getPlayerData(),
                     this.objectivePlayedComboBox.getSelectedItem().toString(),
-                    this.tournamentCodeTextField.getText());
+                    this.tournamentCodeTextField.getText(),
+                    this.rankedCheckBox.isSelected());
         } else {
             return new EntryData(
                     this.rightPanel.getPlayerData(),
                     this.leftPanel.getPlayerData(),
                     this.objectivePlayedComboBox.getSelectedItem().toString(),
-                    this.tournamentCodeTextField.getText());
+                    this.tournamentCodeTextField.getText(),
+                    this.rankedCheckBox.isSelected());
         }
     }
 
     private boolean sendDataToApi(EntryData entryData) {
         var httpClient = HttpClient.newHttpClient();
+        var jsonRequest = entryData.getJsonRequest();
         var request = HttpRequest
                 .newBuilder(URI.create("https://firestore.googleapis.com/v1/projects/ttsarmada/databases/(default)/documents/games_vassal"))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(entryData.getJsonRequest()))
+                .POST(HttpRequest.BodyPublishers.ofString(jsonRequest))
                 .build();
         var chat = GameModule.getGameModule().getChatter();
 
