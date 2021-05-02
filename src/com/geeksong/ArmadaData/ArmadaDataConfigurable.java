@@ -4,7 +4,9 @@ import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.Buildable;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Map;
+import VASSAL.build.module.PieceWindow;
 import VASSAL.build.module.documentation.HelpFile;
+import VASSAL.build.widget.PieceSlot;
 import VASSAL.counters.GamePiece;
 import com.geeksong.ArmadaData.model.*;
 import com.geeksong.ArmadaData.ui.UploadResultsFrame;
@@ -13,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -45,6 +48,43 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
             }
 
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            /*
+            window.getComponent() : JPanel
+    component : ArrayList<JTabbedPane>[0]
+        pages : ArrayList<JTabbedPane.Page>
+            title -> Essentials
+            ...
+            title -> Republic
+                component : JTabbedPane
+                    pages: ArrayList<JTabbedPane.Page>
+                        title -> Capital Ships
+                            component : JTabbedPane
+                                pages : ArrayList<JTabbedPane.Page>
+                                    component : JSplitPane
+                                        rightComponent : ScrollPane
+                                            component : ArrayList<JViewPort, JScrollPane.ScrollBar, JScrollPane.ScrollBar>
+                                                component : ArrayList<JList>
+                                                    dataModel : DefaultListModel
+                                                        delegate : Vector<0-8>
+                                                            [0] : PieceSlot
+                                                                name : Acclamator Assault Ship
+                                                            [4] : PieceSlot
+                                                                name : Acclamator I-class Assault Ship
+                                                            [5] : PieceSlot
+                                                                name : Accalmator II-class Assault Ship
+
+                        ...
+                        title -> Repbublic Officers
+             */
+
+            for (final PieceWindow window : GameModule.getGameModule().getAllDescendantComponentsOf(PieceWindow.class)) {
+                if("Game pieces".equals(window.getConfigureName())){
+                    var component = window.getComponent();
+                    if(component instanceof Container) {
+                        searchContainers("Acclamator I-class Assault Ship", (Container) component, null);
+                    }
+                }
+            }
 
             var game = getGame(gameModule, map);
             var uploadResultsFrame = new UploadResultsFrame(game);
@@ -56,6 +96,52 @@ public class ArmadaDataConfigurable extends AbstractConfigurable {
 
             chat.show(exceptionStackTrace.toString());
             chat.show("ArmadaData: Error uploading results. Send the above text to the extension maintainer.");
+        }
+    }
+
+    private String[] FactionNames = new String[] {"Republic"};
+    //private String[] FactionNames = new String[] {"Republic", "Rebel", "Empire", "Separatists"};
+
+    private int getTotalCount(Container container) {
+        return container instanceof JTabbedPane ? ((JTabbedPane) container).getTabCount() : container.getComponentCount();
+    }
+
+    private Component getComponent(Container container, int index) {
+        return container instanceof JTabbedPane ? ((JTabbedPane) container).getComponentAt(index) : container.getComponent(index);
+    }
+
+    private void searchContainers(String searchFor, Container container, String lastFoundFactionName) {
+        for (var k = 0; k < getTotalCount(container); k++) {
+            var component = getComponent(container, k);
+            if (component instanceof JTabbedPane) {
+                var tabbedPane = (JTabbedPane) component;
+                for (int i = 0; i < tabbedPane.getComponentCount(); i++) {
+                    var tabTitle = tabbedPane.getTitleAt(i);
+                    var tabComponent = tabbedPane.getComponentAt(i);
+                    // TODO: Repro problem:
+                    // 1. Put a breakpoint on the next line.
+                    // 2. Continue until tabbedPane.getTitleAt(i) == "Republic"
+                    // 3. Check both tabbedPane.getComponentAt(i) and tabbedPane.getTabComponentAt(i)
+                    // Expected: One of them to be a JSplitPane, as seen in tabbedPane.pages
+                    // Actual: getComponentAt returns an empty JPanel, getTabComponentAt returns null
+                    if(tabComponent instanceof Container) {
+                        if (Arrays.stream(FactionNames).anyMatch(name -> name.equals(tabTitle)))
+                            searchContainers(searchFor, (Container) tabComponent, tabTitle);
+                        else
+                            searchContainers(searchFor, (Container) tabComponent, lastFoundFactionName);
+                    }
+                }
+            } else if(component instanceof JList) {
+                var list = (JList) component;
+                var model = list.getModel();
+                for(int j = 0; j < model.getSize(); j++ ) {
+                    var pieceSlot = (PieceSlot) model.getElementAt(j);
+                    if(searchFor.equals(pieceSlot.getName())) {
+                        var i = 0;
+                    }
+                }
+            } else if (component instanceof Container)
+                searchContainers(searchFor, (Container) component, lastFoundFactionName);
         }
     }
 
