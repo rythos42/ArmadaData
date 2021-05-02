@@ -17,15 +17,6 @@ This is an extension to the [VASSAL](http://www.vassalengine.org/index.php) modu
 
 ## TODO ##
 - Add "Ranked/Casual" toggle and update API post to send it
-- got it using a certain combination of things ("single window" option in Preferences+cutting/pasting other Game Piece Palettes below the main one)
-  - check to see if this actually allows me to get access to the piece tree to determine faction
-```
-        for (final PieceWindow window : GameModule.getGameModule().getAllDescendantComponentsOf(PieceWindow.class)) {
-            if("Game pieces".equals(window.getConfigureName())){
-                var i = 0;
-            }
-        }
- ```
 
 - I recommend posting in TTS discord "worked with Valadian to make a plugin to upload to TTS Armada score cloud", "for when you have to play in Vassal but still want to get ranked credit for the game"
 - put out to public
@@ -40,27 +31,28 @@ New release
 - updated dev environment to be easier to get started developing
 
 ## Future ##
-- Consider how to calculate fleet points for players
-  - Build library of card/ship stats in this app? Means maintaining that forever.
-  - Screenscrape existing fleet builder? (AFD has them all in an SPA) Need to ask that person about this, not the best plan for future-proofing.
-  - Build a common API? Difficult, again needs a maintainer.
-  - Add points cost to fleet display "Acclamator II-class Assault Ship (71)"
-- After we have fleet points, consider how to calculate score for players
-  - Count dead ships by "ships not in play area"
-  - Count objective points by "objective with tokens", rebel vs imperial tokens
-  - TTS puts the calculation in for players, but allows them to override it
-- How to count better squadrons?
-  - Presently counting squadrons on the table and comparing to who has what card
-  - Doesn't account for mirror matches at all.
-- fleets spawned by Shrimpbox have a side of "<observer>", so am unable to link them to a certain player.
-  - more evidence we might want an in-vassal ship spawner
-
-## Random Stuff ##
-
-How to get Vassal CLI arguments
-
-`c:\users\craig\.jdks\openjdk-11\bin\java -classpath "c:\program files\vassal-3.5.5\lib\vengine.jar" VASSAL.launch.Player -h`
-
-Some code from TTS
-
-`https://github.com/Valadian/TabletopSimulatorIncludeDir/tree/master/TTS_armada`
+- Faction auto-selection
+  - Tried to use PieceWindow, but ran into a Java/VASSAL problem and couldn't fix it. Posted on forum, have a branch with prototype code, not hopeful it will work.
+  - Having GK add faction as a Layer Marker on each ship would resolve this really easily.
+- Player auto-selection of Shrimpbot spawned fleets
+  - Not likely to be really easy to solve with current tech.
+  - in-VASSAL fleet spawner would solve this
+- Mirror matches and squadron counting
+  - Presently the algorithm gets all your cards, then counts all the squadron models on the table and assigns them as additional squadrons to the first player who has that squadron.
+  - This doesn't work for mirror matches, as both players may have the same squadron.
+  - I don't have a good solution for this right now.
+  - Use the mirror match markers somehow?
+  - in-VASSAL fleet spawner would solve this, as each fleet data could be stored as a unit
+- Auto-calculate fleet points
+  - Presently there is no facility to calculate fleet points, as VASSAL/module doesn't have this information.
+  - Build a library of card stats? I don't want to maintain such a thing in this app.
+  - Parse card images? Not a great plan.
+  - Screenscrape another fleet builder or wiki? Also not a great plan. 
+  - Build an external API of card stats? Possible, consider collaborating with other community developers on this.
+  - in-VASSAL fleet spawner could solve this
+- Add points cost to fleet display and what we sent to API "Acclamator II-class Assault Ship (71)"
+- Auto-calculate final score
+  - This isn't really hard, but with no fleet points it doesn't seem worthwhile.
+  - Have a library of objectives and what their victory tokens are worth
+  - Tokens above the card count towards the top player, tokens below the card count towards the bottom player.
+  - Count dead ships/squadrons as ships not in the play area
