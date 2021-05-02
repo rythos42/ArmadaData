@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="VASSAL" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="VASSAL.launch.Player" />
+    <module name="ArmadaData" />
+    <option name="PROGRAM_PARAMETERS" value="--load &quot;$VASSAL_MODULE_BASEDIR$/ArmadaModule_-_4.4.0.vmod&quot; &quot;$ProjectFileDir$/Test.vsav&quot;" />
+    <selectedOptions>
+      <option name="environmentVariables" visible="false" />
+    </selectedOptions>
+    <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

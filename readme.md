@@ -1,19 +1,22 @@
-## Goals ##
+# ArmadaData #
+This is an extension to the [VASSAL](http://www.vassalengine.org/index.php) module for the tabletop wargame [Star Wars Armada](http://www.vassalengine.org/wiki/Module:Star_Wars:_Armada). It allows players to submit data to a common server, to help with determining global trends in the game.
+
+## Project Goals ##
 1. Allow players to submit match results in order to gain better global game data.
 2. Attempt to figure out inputs based on board state.  
-3. Avoid requiring "unreasonable" playing-conventions ("put this here, and that there")
-4. Avoid requiring changes to main Vassal module
-    4. Though this may become useful if this sees use.
+3. Avoid *requiring* unreasonable playing-conventions ("put this here, and that there")
+4. Avoid *requiring* changes to main VASSAL Armada module
+    4. Though this may be a useful collaboration in the future.
 
 ## To get started developing ##
-1. Update project values to point vengine.jar to your vassal installation
-2. Update project run configuration to point to the Vassal module you'll be running it with
+1. (optional?) Install IntelliJ
+2. Set project path variable `VASSAL_BASEDIR` to point to your VASSAL directory, like `C:\Program Files\Vassal-3.5.3`.
+3. Set project path variable `VASSAL_MODULE_BASEDIR` to point to the directory where you keep your VASSAL modules, or the location of the Armada module. 
 3. Build the project 
-4. In the Vassal module select screen, add the extension from {src}\out\artifacts\CreateVMDX\ArmadaData.vmdx
+4. In the VASSAL module select screen, add the extension from {repo}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
 ## TODO ##
 - Add "Ranked/Casual" toggle and update API post to send it
-- figure out how to use IntelliJ variables in project to make it easier for others to start working on it
 - got it using a certain combination of things ("single window" option in Preferences+cutting/pasting other Game Piece Palettes below the main one)
   - check to see if this actually allows me to get access to the piece tree to determine faction
 ```
@@ -34,6 +37,7 @@ New release
 - fixed bug where if the player who spawned a fleet isn't in the game, an error would occur
 - fixed bug with counting squadrons incredibly wrong 
 - preventing errors from trying to go to the Vassal bugtracker, they won't help
+- updated dev environment to be easier to get started developing
 
 ## Future ##
 - Consider how to calculate fleet points for players
