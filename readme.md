@@ -10,10 +10,11 @@ This is an extension to the [VASSAL](http://www.vassalengine.org/index.php) modu
 
 ## To get started developing ##
 1. (optional?) Install IntelliJ
-2. Set project path variable `VASSAL_BASEDIR` to point to your VASSAL directory, like `C:\Program Files\Vassal-3.5.3`.
-3. Set project path variable `VASSAL_MODULE_BASEDIR` to point to the directory where you keep your VASSAL modules, or the location of the Armada module. 
-3. Build the project 
-4. In the VASSAL module select screen, add the extension from {repo}\out\artifacts\CreateVMDX\ArmadaData.vmdx
+2. (optional?) Install Java SDK 11 (VASSAL was cranky if I used other versions)
+3. Set project path variable `VASSAL_BASEDIR` to point to your VASSAL directory, like `C:\Program Files\Vassal-3.5.3`.
+4. Set project path variable `VASSAL_MODULE_BASEDIR` to point to the directory where you keep your VASSAL modules, or the location of the Armada module. 
+5. Build the project 
+6. In the VASSAL module select screen, add the extension from {repo}\out\artifacts\CreateVMDX\ArmadaData.vmdx
 
 ## Future ##
 - Faction auto-selection
